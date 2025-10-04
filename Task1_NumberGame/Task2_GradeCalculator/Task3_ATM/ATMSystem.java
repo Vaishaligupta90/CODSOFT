@@ -4,69 +4,95 @@
 // Run:
 // javac ATMSystem.java
 // java ATMSystem
-
 import java.util.Scanner;
 
-class BankAccount {
+// Helper class renamed to "UserAccount"
+class UserAccount {
     private double balance;
-    public BankAccount(double initial) { this.balance = initial; }
-    public double getBalance() { return balance; }
-    public boolean withdraw(double amount) {
-        if (amount <= 0 || amount > balance) return false;
-        balance -= amount;
+
+    // Constructor
+    public UserAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    // Deposit money
+    public boolean deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("❌ Invalid deposit amount!");
+            return false;
+        }
+        balance += amount;
+        System.out.println("✅ Deposit successful! New Balance: ₹" + balance);
         return true;
     }
-    public boolean deposit(double amount) {
-        if (amount <= 0) return false;
-        balance += amount;
-        return true;
+
+    // Withdraw money
+    public boolean withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("❌ Invalid withdrawal amount!");
+            return false;
+        } else if (amount > balance) {
+            System.out.println("❌ Insufficient funds!");
+            return false;
+        } else {
+            balance -= amount;
+            System.out.println("✅ Withdrawal successful! Remaining Balance: ₹" + balance);
+            return true;
+        }
+    }
+
+    // Check balance
+    public double getBalance() {
+        return balance;
     }
 }
 
-public class ATMSystem {
+// Main class (must match file name in compiler)
+public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        BankAccount account = new BankAccount(1000.0); // start with ₹1000 for demo
-        System.out.println("ATM Demo - Vaishali's version (CodSoft)");
+        UserAccount account = new UserAccount(1000.0); // starting balance ₹1000
+        int choice;
 
-        boolean running = true;
-        while (running) {
-            System.out.println("\n--- ATM Menu ---");
-            System.out.println("1. Check Balance");
-            System.out.println("2. Deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Exit");
-            System.out.print("Choose (1-4): ");
+        System.out.println("💳 Welcome to CodSoft ATM 💳");
 
-            String choice = sc.nextLine().trim();
+        do {
+            System.out.println("\n------ ATM MENU ------");
+            System.out.println("1️⃣  Check Balance");
+            System.out.println("2️⃣  Deposit Money");
+            System.out.println("3️⃣  Withdraw Money");
+            System.out.println("4️⃣  Exit");
+            System.out.print("👉 Enter your choice: ");
+            choice = sc.nextInt();
+
             switch (choice) {
-                case "1":
-                    System.out.printf("Current balance: ₹%.2f\n", account.getBalance());
+                case 1:
+                    System.out.println("💰 Current Balance: ₹" + account.getBalance());
                     break;
-                case "2":
-                    System.out.print("Enter amount to deposit: ");
-                    try {
-                        double amt = Double.parseDouble(sc.nextLine().trim());
-                        if (account.deposit(amt)) System.out.println("Deposit successful.");
-                        else System.out.println("Invalid amount.");
-                    } catch (Exception e) { System.out.println("Invalid entry."); }
+
+                case 2:
+                    System.out.print("Enter amount to deposit: ₹");
+                    double deposit = sc.nextDouble();
+                    account.deposit(deposit);
                     break;
-                case "3":
-                    System.out.print("Enter amount to withdraw: ");
-                    try {
-                        double amt = Double.parseDouble(sc.nextLine().trim());
-                        if (account.withdraw(amt)) System.out.println("Please collect cash. New balance: ₹" + account.getBalance());
-                        else System.out.println("Insufficient funds or invalid amount.");
-                    } catch (Exception e) { System.out.println("Invalid entry."); }
+
+                case 3:
+                    System.out.print("Enter amount to withdraw: ₹");
+                    double withdraw = sc.nextDouble();
+                    account.withdraw(withdraw);
                     break;
-                case "4":
-                    running = false;
+
+                case 4:
+                    System.out.println("🙏 Thank you for using CodSoft ATM!");
                     break;
+
                 default:
-                    System.out.println("Please choose 1,2,3 or 4.");
+                    System.out.println("❌ Invalid choice! Try again.");
             }
-        }
-        System.out.println("Thank you for using Vaishali's ATM demo.");
+
+        } while (choice != 4);
+
         sc.close();
     }
 }
+
